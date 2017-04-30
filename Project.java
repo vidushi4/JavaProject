@@ -1,5 +1,6 @@
 import javax.swing.*;  
-import java.awt.event.*;  
+import java.awt.event.*; 
+import java.awt.*;
 class Jug
 {
 	int capacity;
@@ -35,8 +36,10 @@ class Jug
 public class Project implements ActionListener
 {  
     JTextField tf1,tf2,tf3;  
+	JTextArea area;
     JButton b1,b2;  
-	Project(){  
+	Project()
+	{  
         JFrame f= new JFrame();  
         tf1=new JTextField("Capacity of jug 1");  
         tf1.setBounds(50,50,150,20);  
@@ -46,12 +49,17 @@ public class Project implements ActionListener
         tf3.setBounds(410,50,150,20);  
         
         b1=new JButton("Submit");  
-        b1.setBounds(590,50,80,20);  
-         
-		b1.addActionListener(this);  
+        b1.setBounds(590,50,80,20); 
+		
+		
+		
+        area=new JTextArea();  
+        area.setBounds(50,400, 200,320); 
+		
+        b1.addActionListener(this);  
           
-        f.add(tf1);f.add(tf2);f.add(tf3);f.add(b1);  
-        f.setSize(800,800);  
+        f.add(tf1);f.add(tf2);f.add(tf3);f.add(b1); f.add(area); 
+        f.setSize(1200,1200);  
         f.setLayout(null);  
         f.setVisible(true);  
     }         
@@ -66,9 +74,29 @@ public class Project implements ActionListener
 		
 		Jug A=new Jug(a);
 		Jug B=new Jug(b);
-		System.out.println("(A,B) = (" + A.getValue()+ ","+B.getValue()+")");
-		solve(A,B,result);
-		System.out.println("Done!");
+	
+		area.setText("(A,B) = (" + A.getValue()+ ","+B.getValue()+")"+"\n");
+			
+		while(A.getValue() != result)
+		{
+			if(!A.isFull() && B.isEmpty())
+			{
+				area.append("Fill B"+"\n");
+				B.Fill();
+				area.append( "(A, B) = (" + A.getValue() + ", " + B.getValue() +")"+"\n");
+			}
+			if(A.isFull())
+			{
+				area.append( "Empty A"+"\n");
+				A.Empty();
+				area.append("(A, B) = (" + A.getValue()+ ", "+B.getValue()+ ")"+"\n");
+			}
+			area.append( "Pour from B into A"+"\n");
+			fill(A, B);
+			area.append( "(A, B) = (" + A.getValue() + ", " + B.getValue() + ")"+"\n");
+		}
+		
+		area.append("Done!"+"\n");
 		
     }  
 	static void fill(Jug A, Jug B)
@@ -104,27 +132,7 @@ public class Project implements ActionListener
 		return false;
 	}
 
-	static void solve(Jug A, Jug B, int result)
-	{
-		while(A.getValue() != result)
-		{
-			if(!A.isFull() && B.isEmpty())
-			{
-				System.out.println("Fill B");
-				B.Fill();
-				System.out.println("(A, B) = (" + A.getValue() + ", " + B.getValue() +")");
-			}
-			if(A.isFull())
-			{
-				System.out.println("Empty A");
-				A.Empty();
-				System.out.println("(A, B) = (" + A.getValue()+ ", "+B.getValue()+ ")");
-			}
-			System.out.println("Pour from B into A");
-			fill(A, B);
-			System.out.println("(A, B) = (" + A.getValue() + ", " + B.getValue() + ")");
-		}
-	}
+	
 public static void main(String[] args) {  
     new Project();  
 } 
